@@ -1,0 +1,20 @@
+name: Fetch Data and Create PR
+
+on:
+  repository_dispatch:
+    types:
+      - sanity_content_changed
+jobs:
+  fetch-data:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Extract Event Type from Payload
+        id: extract_event
+        run: echo "::set-output name=event::$(echo ${{ github.event.client_payload.event_type }} | tr -d '\"')"
+
+      - name: Check if Event Type is Valid
+        run: |
+          if [ "${{ steps.extract_event.outputs.event }}" != "sanity_content_changed" ]; then
+            echo "Invalid event type. Exiting..."
+            exit 1
+          fi
