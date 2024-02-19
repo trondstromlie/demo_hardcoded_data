@@ -2,7 +2,7 @@ name: Fetch Data and Create PR
 on:
   repository_dispatch:
     types:
-      - sanity_content_changed
+      - webhook
 jobs:
   fetch-data:
     runs-on: ubuntu-latest
