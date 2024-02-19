@@ -9,5 +9,11 @@ jobs:
     steps:
       - name: Extract Event Type from Payload
         id: extract_event
-        run: echo "${{ github.event.client_payload}}"
+        run: echo "::set-output name=event::$(echo ${{ github.event.client_payload.event_type }} | tr -d '\"')"
 
+      - name: Check if Event Type is Valid
+        run: |
+          if [ "${{ steps.extract_event.outputs.event }}" != "sanity_content_changed" ]; then
+            echo "Invalid event type. Exiting..."
+            exit 1
+          fi
